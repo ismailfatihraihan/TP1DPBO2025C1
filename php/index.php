@@ -1,4 +1,5 @@
 <?php
+// index.php
 session_start();
 require_once 'PetShop.php';
 $petshop = new PetShop();
@@ -6,20 +7,33 @@ $petshop = new PetShop();
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add_pet'])) {
+            $imagePath = '';
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $imagePath = basename($_FILES['image']['name']);
+            move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
+        }
+
         $petshop->addPet(
             $_POST['name'],
             $_POST['category'],
             $_POST['price'],
-            $_POST['image']
-        );
+            $imagePath
+        );    
     } elseif (isset($_POST['update_pet'])) {
+        $imagePath = $edit_pet['image']; // Default ke gambar lama jika tidak ada upload baru
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $imagePath = basename($_FILES['image']['name']);
+            move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
+        }
+
         $petshop->updatePet(
             $_POST['id'],
             $_POST['name'],
             $_POST['category'],
             $_POST['price'],
-            $_POST['image']
+            $imagePath
         );
+
     }
     header("Location: index.php");
     exit();
@@ -98,7 +112,7 @@ if (isset($_GET['edit'])) {
                 <h5 class="mb-0"><?= $edit_pet ? 'Edit' : 'Tambah' ?> Hewan</h5>
             </div>
             <div class="card-body">
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <?php if ($edit_pet): ?>
                     <input type="hidden" name="id" value="<?= $edit_pet['id'] ?>">
                     <?php endif; ?>
@@ -122,9 +136,8 @@ if (isset($_GET['edit'])) {
                                    value="<?= $edit_pet['price'] ?? '' ?>" min="0" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">URL Gambar</label>
-                            <input type="url" name="image" class="form-control" 
-                                   value="<?= htmlspecialchars($edit_pet['image'] ?? '') ?>" required>
+                            <label class="form-label">Upload Gambar</label>
+                            <input type="file" name="image" class="form-control" accept="image/*" <?= $edit_pet ? '' : 'required' ?>>
                         </div>
                         <div class="col-12">
                             <button type="submit" name="<?= $edit_pet ? 'update_pet' : 'add_pet' ?>" 
@@ -162,8 +175,8 @@ if (isset($_GET['edit'])) {
                                 <td><?= htmlspecialchars($pet['name']) ?></td>
                                 <td><?= htmlspecialchars($pet['category']) ?></td>
                                 <td>Rp <?= number_format($pet['price'], 0, ',', '.') ?></td>
-                                <td><img src="<?= htmlspecialchars($pet['image']) ?>" 
-                                       class="pet-image rounded"></td>
+                                <td><img src="<?= htmlspecialchars($pet['image']) ?>" class="pet-image rounded">
+                                </td>
                                 <td class="action-links">
                                     <a href="index.php?edit=<?= $pet['id'] ?>" 
                                        class="btn btn-sm btn-warning">Edit</a>

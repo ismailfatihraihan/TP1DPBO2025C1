@@ -1,5 +1,5 @@
 <?php
-
+// PetShop.php
 class PetShop {
     private $id;
     private $name;
@@ -15,9 +15,9 @@ class PetShop {
                 'category' => ["Hewan", "Hewan", "Hewan"],
                 'price' => [98999, 215999, 14199],
                 'image' => [
-                    "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGV0fGVufDB8MXwwfHx8Mg%3D%3D",
-                    "https://images.unsplash.com/photo-1572713629470-3e9f5d4fdf4c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dHVydGxlfGVufDB8MXwwfHx8Mg%3D%3D",
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-VY-oM0QlIH4q8o_7Mg7walaraX9h4skiwg&s"
+                    "cat.jpg",
+                    "cat.jpg",
+                    "cat.jpg",
                 ]
             ];
         }
